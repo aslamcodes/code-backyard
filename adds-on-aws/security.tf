@@ -2,8 +2,8 @@ module "domain_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.3.0"
 
-  name        = "appstream_sg"
-  description = ""
+  name        = "domain_sg"
+  description = "Security group for ${local.domain_name}'s DC"
   vpc_id      = module.vpc.vpc_id
 
   ingress_with_cidr_blocks = [
@@ -22,7 +22,7 @@ module "domain_sg" {
     { from_port = -1, to_port = -1, protocol = "icmp", cidr_blocks = local.dc_ingress, description = "ICMP (Ping)" }
   ]
 
-  egress_rules = [
+  egress_with_cidr_blocks = [
     { from_port = 0, to_port = 0, protocol = "-1", cidr_blocks = "0.0.0.0/0" }
   ]
 }
