@@ -1,0 +1,6 @@
+- [ ] Domain Join the fleets
+- [ ] Try loggin in, prompts for password
+- [ ] Setup CBA
+- [ ] Domain Join the fleets
+- [ ] Try loggin in, prompts for password
+- [ ] Setup CBA
