@@ -22,10 +22,7 @@ module "domain_sg" {
     { from_port = -1, to_port = -1, protocol = "icmp", cidr_blocks = local.dc_ingress, description = "ICMP (Ping)" }
   ]
 
-  egress_with_cidr_blocks = [
-    {
-      protocol    = "-1"
-      cidr_blocks = "0.0.0.0/0"
-    }
+  egress_rules = [
+    { from_port = 0, to_port = 0, protocol = "-1", cidr_blocks = "0.0.0.0/0" }
   ]
 }
