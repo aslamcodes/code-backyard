@@ -1,11 +1,3 @@
-resource "aws_security_group" "cgw_device" {
-  name        = "cgw_security"
-  description = "Security group for CGW Device"
-  vpc_id      = module.vpc.vpc_id
-}
-
-
-
 resource "aws_security_group" "domain_sg" {
   name        = "domain_sg"
   description = "Security group for Domain Controller"

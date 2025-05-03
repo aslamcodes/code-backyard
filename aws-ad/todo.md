@@ -1,0 +1,3 @@
+- [x] Setup AD Here
+- [ ] Sync Both ADs
+- [ ] Setup AD Connector

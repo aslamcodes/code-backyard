@@ -1,1 +1,1 @@
-- [ ] Setup Pseudo DC Server
+- [x] Setup Pseudo DC Server
