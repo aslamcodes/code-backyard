@@ -1,3 +1,3 @@
-module word-counter
+module wc
 
 go 1.24.1
