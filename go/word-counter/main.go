@@ -24,10 +24,28 @@ func count(r io.Reader, lines bool) int {
 	return wc
 }
 
+func countBytes(r io.Reader) int {
+	sc := bufio.NewScanner(r)
+
+	bytes := 0
+
+	for sc.Scan() {
+		bytes += len(sc.Bytes())
+	}
+
+	return bytes
+}
+
 func main() {
-	var line = flag.Bool("lines", false, "Counts the lines instead")
+	// Not clearly the best way to do this, or even its is wrong
+	var line = flag.Bool("l", false, "Counts the lines instead")
+	var bytes = flag.Bool("b", false, "Counts bytes")
 
 	flag.Parse()
 
-	fmt.Println(count(os.Stdin, *line))
+	if *line || !*bytes {
+		fmt.Println(count(os.Stdin, *line))
+	} else {
+		fmt.Println(countBytes(os.Stdin))
+	}
 }
