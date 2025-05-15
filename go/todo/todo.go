@@ -2,7 +2,6 @@ package todo
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -42,32 +41,47 @@ func (l *List) Remove(i int) error {
 }
 
 func (l *List) Save(vault string) error {
+	// This is code is hard for testing without any side effects, as it requires a file to created at a definite place
 	js, err := json.Marshal(*l)
 
 	if err != nil {
 		return err
 	}
 
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+
+	if err != nil {
+		fmt.Printf("Error %s", err)
+	}
 
 	path := filepath.Join(home, ".todo", fmt.Sprintf("%s.json", vault))
 
-	os.WriteFile(path, js, 0644)
+	err = os.MkdirAll(filepath.Dir(path), 0755)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(path, js, 0644)
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
 func (l *List) Load(vault string) error {
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+
+	if err != nil {
+		return err
+	}
 
 	path := filepath.Join(home, ".todo", fmt.Sprintf("%s.json", vault))
 
 	js, err := os.ReadFile(path)
 
 	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			return nil
-		}
 		return err
 	}
 

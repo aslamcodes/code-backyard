@@ -1,6 +1,12 @@
 package todo_test
 
 import (
+	// "fmt"
+	// "os"
+	// "path/filepath"
+	"fmt"
+	"os"
+	"path/filepath"
 	"testing"
 	"todo"
 )
@@ -35,10 +41,31 @@ func TestSave(t *testing.T) {
 	l.Add("t3")
 	l.Add("t4")
 
-	vault := "home"
+	vault := "temp"
 
-	l.Save(vault)
-}
+	err := l.Save(vault)
 
-func TestLoad(t *testing.T) {
+	if err != nil {
+		t.Errorf("Error %s", err)
+	}
+
+	l2 := todo.List{}
+
+	err = l2.Load(vault)
+
+	if err != nil {
+		t.Errorf("Error %s", err)
+	}
+
+	if l[0].Title != l2[0].Title {
+		t.Errorf("List not matches")
+	}
+
+	homeDir, err := os.UserHomeDir()
+
+	if err != nil {
+		fmt.Printf("Error getting the home dir")
+	}
+
+	os.Remove(filepath.Join(homeDir, ".todo", fmt.Sprintf("%s.json", vault)))
 }
