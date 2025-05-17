@@ -40,6 +40,17 @@ func (l *List) Remove(i int) error {
 	return nil
 }
 
+func (l *List) Complete(i int) error {
+	if i <= 0 || i > len(*l) {
+		return fmt.Errorf("Invalid Id")
+	}
+
+	(*l)[i-1].Done = true
+	(*l)[i-1].CompletedAt = time.Now()
+
+	return nil
+}
+
 func (l *List) Save(vault string) error {
 	// This is code is hard for testing without any side effects, as it requires a file to created at a definite place
 	js, err := json.Marshal(*l)
