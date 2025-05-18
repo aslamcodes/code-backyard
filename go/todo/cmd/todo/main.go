@@ -3,22 +3,21 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"todo"
 )
 
 func main() {
 	var vault = flag.String("v", "home", "The vault name")
-
 	flag.Parse()
 
 	var list = todo.List{}
 
-	err := list.Load(*vault)
+	todo.Init(*vault)
 
-	if err != nil {
-		// How I'm going to be sure that it's only going to be file not found error?
-		fmt.Printf("Creating vault on %s", *vault)
-		list.Save(*vault)
+	if err := list.Load(*vault); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	for _, todo := range flag.Args() {

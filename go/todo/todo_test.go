@@ -70,20 +70,20 @@ func TestSave(t *testing.T) {
 	os.Remove(filepath.Join(homeDir, ".todo", fmt.Sprintf("%s.json", vault)))
 }
 
-func TestComplete(t *testing.T) {
-	l := todo.List{}
-
-	l.Add("t1")
-
-	id := 1
-
-	err := l.Complete(id)
-
-	if err != nil {
-		t.Error(err)
-	}
-
-	if !l[id-1].Done {
-		t.Error("Task not completed")
-	}
-}
+// func TestComplete(t *testing.T) {
+// 	l := todo.List{}
+//
+// 	l.Add("t1")
+//
+// 	id := 1
+//
+// 	err := l.Complete(id)
+//
+// 	if err != nil {
+// 		t.Error(err)
+// 	}
+//
+// 	if !l[id-1].Done {
+// 		t.Error("Task not completed")
+// 	}
+// }

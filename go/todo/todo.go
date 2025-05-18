@@ -3,8 +3,6 @@ package todo
 import (
 	"encoding/json"
 	"fmt"
-	"os"
-	"path/filepath"
 	"slices"
 	"time"
 )
@@ -59,22 +57,7 @@ func (l *List) Save(vault string) error {
 		return err
 	}
 
-	home, err := os.UserHomeDir()
-
-	if err != nil {
-		fmt.Printf("Error %s", err)
-	}
-
-	path := filepath.Join(home, ".todo", fmt.Sprintf("%s.json", vault))
-
-	err = os.MkdirAll(filepath.Dir(path), 0755)
-	if err != nil {
-		return err
-	}
-
-	err = os.WriteFile(path, js, 0644)
-
-	if err != nil {
+	if err := writeToVault(js, vault); err != nil {
 		return err
 	}
 
@@ -82,15 +65,7 @@ func (l *List) Save(vault string) error {
 }
 
 func (l *List) Load(vault string) error {
-	home, err := os.UserHomeDir()
-
-	if err != nil {
-		return err
-	}
-
-	path := filepath.Join(home, ".todo", fmt.Sprintf("%s.json", vault))
-
-	js, err := os.ReadFile(path)
+	js, err := readFromVault(vault)
 
 	if err != nil {
 		return err
