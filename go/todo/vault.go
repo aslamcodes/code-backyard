@@ -7,7 +7,7 @@ import (
 )
 
 var DEFAULT_VAULT_STORAGE = func() string {
-	val := os.Getenv("VAULT_STORAGE")
+	val := os.Getenv("TODO_VAULT_STORAGE")
 	if val == "" {
 		return ".todo"
 	}

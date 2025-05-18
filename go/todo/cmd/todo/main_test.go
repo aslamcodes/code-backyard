@@ -1,22 +1,23 @@
 package main_test
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"testing"
-	"time"
-	"todo"
 )
 
 var toolName string = "test"
 
-var vault string = "test"
+var vault string = "test2"
 
 func TestMain(m *testing.M) {
+	storage := "testing_storage"
+
+	os.Setenv("TODO_VAULT_STORAGE", storage)
+
 	if runtime.GOOS == "windows" {
 		toolName += ".exe"
 	}
@@ -28,19 +29,27 @@ func TestMain(m *testing.M) {
 
 	code := m.Run()
 
-	time.Sleep(time.Second)
 	err := os.Remove(toolName)
 
 	if err != nil {
 		fmt.Println("Cleanup failed")
-
 		os.Exit(1)
 	}
+
+	home, err := os.UserHomeDir()
+
+	if err != nil {
+		fmt.Println("Unable to get home dir")
+		os.Exit(1)
+	}
+
+	err = os.RemoveAll(filepath.Join(home, storage))
 
 	os.Exit(code)
 }
 
 func TestCli(t *testing.T) {
+	task := "Task"
 	t.Run("AddNewTasks", func(t *testing.T) {
 		path, err := os.Getwd()
 
@@ -48,31 +57,28 @@ func TestCli(t *testing.T) {
 			t.Fatal("Unable to get working directory")
 		}
 
-		if out, err := exec.Command(filepath.Join(path, toolName), "-v", vault, "Task").CombinedOutput(); err != nil {
+		if out, err := exec.Command(filepath.Join(path, toolName), "-v", vault, task).CombinedOutput(); err != nil {
 			t.Fatalf("Command failed to execute: %s", out)
 		}
-
-		home, err := os.UserHomeDir()
-
-		if err != nil {
-			t.Error("Home Dir is not available")
-		}
-
-		l := todo.List{}
-
-		content, err := os.ReadFile(filepath.Join(home, todo.DEFAULT_VAULT_STORAGE, fmt.Sprintf("%s.json", vault)))
-
-		if err != nil {
-			t.Errorf("Failed to parse json: %s", err)
-		}
-
-		json.Unmarshal(content, &l)
-
-		if l[0].Title != "Task" {
-			t.Error("Tasks not matched")
-		}
-
 	})
 
-	t.Run("ListTasks", func(t *testing.T) {})
+	t.Run("ListTasks", func(t *testing.T) {
+		expected := task + "\n"
+
+		path, err := os.Getwd()
+
+		if err != nil {
+			t.Fatal("Unable to get working directory")
+		}
+
+		out, err := exec.Command(filepath.Join(path, toolName), "-v", vault).CombinedOutput()
+
+		if string(out) != expected {
+			t.Errorf("Not matched %s", out)
+		}
+
+		if err != nil {
+			t.Fatalf("Command failed to execute: %s", out)
+		}
+	})
 }
