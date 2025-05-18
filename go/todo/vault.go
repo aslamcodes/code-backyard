@@ -6,7 +6,13 @@ import (
 	"path/filepath"
 )
 
-const DEFAULT_VAULT_STORAGE string = ".todo"
+var DEFAULT_VAULT_STORAGE = func() string {
+	val := os.Getenv("VAULT_STORAGE")
+	if val == "" {
+		return ".todo"
+	}
+	return val
+}()
 
 func getRoot() (string, error) {
 	home, err := os.UserHomeDir()

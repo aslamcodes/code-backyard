@@ -10,9 +10,9 @@ import (
 )
 
 func main() {
-
 	var vault = flag.String("v", "home", "The vault name")
 	var profiling = flag.Bool("p", false, "Profiling")
+
 	flag.Parse()
 
 	if *profiling {

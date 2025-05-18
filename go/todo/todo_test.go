@@ -1,9 +1,6 @@
 package todo_test
 
 import (
-	// "fmt"
-	// "os"
-	// "path/filepath"
 	"fmt"
 	"os"
 	"path/filepath"
