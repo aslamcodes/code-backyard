@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 	"todo"
 )
 
@@ -20,13 +21,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	for _, todo := range flag.Args() {
-		list.Add(todo)
-	}
+	list.Add(strings.Join(flag.Args(), " "))
 
+	// Show Items
 	for _, todo := range list {
 		fmt.Println(todo.Title)
 	}
 
-	list.Save(*vault)
+	err := list.Save(*vault)
+
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }
