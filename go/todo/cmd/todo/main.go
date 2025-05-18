@@ -5,12 +5,19 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 	"todo"
 )
 
 func main() {
+
 	var vault = flag.String("v", "home", "The vault name")
+	var profiling = flag.Bool("p", false, "Profiling")
 	flag.Parse()
+
+	if *profiling {
+		defer trackTime(time.Now(), "main")
+	}
 
 	var list = todo.List{}
 
@@ -21,11 +28,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	list.Add(strings.Join(flag.Args(), " "))
+	if len(flag.Args()) > 0 {
+		list.Add(strings.Join(flag.Args(), " "))
+	}
 
 	// Show Items
-	for _, todo := range list {
-		fmt.Println(todo.Title)
+	for _, item := range list {
+		fmt.Println(item.Title)
 	}
 
 	err := list.Save(*vault)
@@ -34,4 +43,9 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+}
+
+func trackTime(start time.Time, name string) {
+	elapsed := time.Since(start)
+	fmt.Printf("%s took %s\n", name, elapsed)
 }
