@@ -71,7 +71,7 @@ func TestCli(t *testing.T) {
 			t.Fatal("Unable to get working directory")
 		}
 
-		out, err := exec.Command(filepath.Join(path, toolName), "-v", vault).CombinedOutput()
+		out, err := exec.Command(filepath.Join(path, toolName), "-v", vault, "-l").CombinedOutput()
 
 		if string(out) != expected {
 			t.Errorf("Not matched %s", out)
@@ -81,4 +81,40 @@ func TestCli(t *testing.T) {
 			t.Fatalf("Command failed to execute: %s", out)
 		}
 	})
+
+	t.Run("ShowAllTasks", func(t *testing.T) {
+		expected := task + "\n"
+
+		path, err := os.Getwd()
+
+		if err != nil {
+			t.Fatal("Unable to get working directory")
+		}
+
+		out, err := exec.Command(filepath.Join(path, toolName), "-v", vault, "-c", "1", "-all").CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("Command failed to execute: %s", out)
+		}
+
+		if string(out) != expected {
+			t.Errorf("Not matched %s", out)
+		}
+	})
+
+	t.Run("CompleteTask", func(t *testing.T) {
+
+		path, err := os.Getwd()
+
+		if err != nil {
+			t.Fatal("Unable to get working directory")
+		}
+
+		out, err := exec.Command(filepath.Join(path, toolName), "-v", vault, "-c", "1").CombinedOutput()
+
+		if err != nil {
+			t.Fatalf("Command failed to execute: %s", out)
+		}
+	})
+
 }

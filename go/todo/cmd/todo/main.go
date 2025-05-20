@@ -11,6 +11,10 @@ import (
 
 func main() {
 	var vault = flag.String("v", "home", "The vault name")
+	var listTasks = flag.Bool("l", false, "List the tasks")
+	var completeTask = flag.Int("c", 0, "The item to complete")
+	var showAll = flag.Bool("all", false, "Shows all the tasks")
+
 	var profiling = flag.Bool("p", false, "Profiling")
 
 	flag.Parse()
@@ -32,9 +36,15 @@ func main() {
 		list.Add(strings.Join(flag.Args(), " "))
 	}
 
-	// Show Items
-	for _, item := range list {
-		fmt.Println(item.Title)
+	switch {
+	case *listTasks:
+		for _, item := range list {
+			if !item.Done || *showAll {
+				fmt.Println(item.Title)
+			}
+		}
+	case *completeTask > 0:
+		list.Complete(*completeTask)
 	}
 
 	err := list.Save(*vault)
